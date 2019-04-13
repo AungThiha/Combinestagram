@@ -30,12 +30,16 @@
 
 package com.raywenderlich.android.combinestagram
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.widget.ImageView
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.BehaviorSubject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -43,6 +47,35 @@ import java.io.OutputStream
 
 
 class SharedViewModel : ViewModel() {
+
+  private val selectedPhotos = MutableLiveData<List<Photo>>()
+  private val subscriptions = CompositeDisposable()
+  private val imagesSubject: BehaviorSubject<MutableList<Photo>>
+          = BehaviorSubject.createDefault(mutableListOf())
+
+  init {
+      subscriptions.add(imagesSubject.subscribe {
+        selectedPhotos.value = imagesSubject.value
+      })
+  }
+
+  fun getSelectedPhotos(): LiveData<List<Photo>> {
+    return selectedPhotos
+  }
+
+  fun addPhoto(photo: Photo) {
+    imagesSubject.value!!.add(photo)
+    imagesSubject.onNext(imagesSubject.value!!)
+  }
+
+  fun clearPhotos(){
+    imagesSubject.value!!.clear()
+  }
+
+  override fun onCleared() {
+    subscriptions.dispose()
+    super.onCleared()
+  }
 
   fun saveBitmapFromImageView(imageView: ImageView, context: Context) {
     val tmpImg = "${System.currentTimeMillis()}.png"

@@ -30,7 +30,10 @@
 
 package com.raywenderlich.android.combinestagram
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -59,14 +62,27 @@ class MainActivity : AppCompatActivity() {
     saveButton.setOnClickListener {
       actionSave()
     }
+
+    viewModel.getSelectedPhotos().observe(this, Observer { photos ->
+      photos?.let {
+        if(photos.isNotEmpty()) {
+          val bitmaps = photos.map { BitmapFactory.decodeResource(resources, it.drawable) }
+          val newBitmap = combineImages(bitmaps)
+          collageImage.setImageDrawable(BitmapDrawable(resources, newBitmap))
+        }else {
+          actionClear()
+        }
+      }
+    })
   }
 
   private fun actionAdd() {
-    println("actionAdd")
+    viewModel.addPhoto(PhotoStore.photos[0])
   }
 
   private fun actionClear() {
-    println("actionClear")
+    viewModel.clearPhotos()
+    collageImage.setImageResource(android.R.color.transparent)
   }
 
   private fun actionSave() {

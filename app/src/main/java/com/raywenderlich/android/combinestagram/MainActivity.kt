@@ -69,10 +69,10 @@ class MainActivity : AppCompatActivity() {
           val bitmaps = photos.map { BitmapFactory.decodeResource(resources, it.drawable) }
           val newBitmap = combineImages(bitmaps)
           collageImage.setImageDrawable(BitmapDrawable(resources, newBitmap))
+          updateUI(photos)
         }else {
           actionClear()
         }
-        updateUI(photos)
       }
     })
   }
@@ -90,13 +90,17 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun actionAdd() {
-    viewModel.addPhoto(PhotoStore.photos[0])
+//    viewModel.addPhoto(PhotoStore.photos[0])
+    val dialog = PhotosBottomDialogFragment.newInstance()
+    dialog.show(supportFragmentManager, PhotosBottomDialogFragment::class.java.simpleName)
+    viewModel.subscribeSelectedPhotos(dialog)
   }
 
   private fun actionClear() {
     viewModel.clearPhotos()
     collageImage.setImageResource(android.R.color.transparent)
     title = getString(R.string.collage)
+    updateUI(listOf())
   }
 
   private fun actionSave() {

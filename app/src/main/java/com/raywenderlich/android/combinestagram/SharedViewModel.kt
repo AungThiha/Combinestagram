@@ -63,13 +63,16 @@ class SharedViewModel : ViewModel() {
     return selectedPhotos
   }
 
-  fun addPhoto(photo: Photo) {
-    imagesSubject.value!!.add(photo)
-    imagesSubject.onNext(imagesSubject.value!!)
-  }
-
   fun clearPhotos(){
     imagesSubject.value!!.clear()
+  }
+
+  fun subscribeSelectedPhotos(fragment: PhotosBottomDialogFragment){
+    subscriptions.add(fragment.selectedPhotos
+            .subscribe {
+              imagesSubject.value!!.add(it)
+              imagesSubject.onNext(imagesSubject.value!!)
+            })
   }
 
   override fun onCleared() {

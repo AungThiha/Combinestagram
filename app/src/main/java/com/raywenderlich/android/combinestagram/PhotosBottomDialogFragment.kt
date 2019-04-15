@@ -73,7 +73,7 @@ class PhotosBottomDialogFragment : BottomSheetDialogFragment(), PhotosAdapter.Ph
   }
 
   override fun photoClicked(photo: Photo) {
-    selectedPhotosSubject.onNext(photo )
+    selectedPhotosSubject.onNext(photo)
   }
 
   companion object {

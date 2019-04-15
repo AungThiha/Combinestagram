@@ -72,8 +72,21 @@ class MainActivity : AppCompatActivity() {
         }else {
           actionClear()
         }
+        updateUI(photos)
       }
     })
+  }
+
+  private fun updateUI(photos: List<Photo>) {
+    val isNotEmpty = photos.isNotEmpty()
+    clearButton.isEnabled = isNotEmpty
+    saveButton.isEnabled = isNotEmpty && photos.size % 2 == 0
+    addButton.isEnabled = photos.size < 6
+    title = if (isNotEmpty){
+      resources.getQuantityString(R.plurals.photos_format, photos.size, photos.size)
+    }else{
+      getString(R.string.collage)
+    }
   }
 
   private fun actionAdd() {
@@ -83,6 +96,7 @@ class MainActivity : AppCompatActivity() {
   private fun actionClear() {
     viewModel.clearPhotos()
     collageImage.setImageResource(android.R.color.transparent)
+    title = getString(R.string.collage)
   }
 
   private fun actionSave() {

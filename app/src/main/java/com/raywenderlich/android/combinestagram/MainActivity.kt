@@ -36,6 +36,10 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -104,6 +108,16 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun actionSave() {
-    println("actionSave")
+    viewModel.saveBitmapFromImageView(collageImage, this)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                    onSuccess = {
+                      Toast.makeText(this, "$it saved", Toast.LENGTH_SHORT).show()
+                    },
+                    onError = {
+                      Toast.makeText(this, "Error saving file: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    }
+            )
   }
 }

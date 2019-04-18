@@ -69,6 +69,9 @@ class SharedViewModel : ViewModel() {
 
   fun subscribeSelectedPhotos(fragment: PhotosBottomDialogFragment){
     subscriptions.add(fragment.selectedPhotos
+            .doOnComplete{
+              Log.v("SharedViewModel", "Completed selecting photos")
+            }
             .subscribe {
               imagesSubject.value!!.add(it)
               imagesSubject.onNext(imagesSubject.value!!)

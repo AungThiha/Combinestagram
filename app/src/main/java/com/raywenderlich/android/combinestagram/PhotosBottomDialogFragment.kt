@@ -56,6 +56,11 @@ class PhotosBottomDialogFragment : BottomSheetDialogFragment(), PhotosAdapter.Ph
     return inflater.inflate(R.layout.layout_photo_bottom_sheet, container, false)
   }
 
+  override fun onDestroy() {
+    selectedPhotosSubject.onComplete()
+    super.onDestroy()
+  }
+
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 

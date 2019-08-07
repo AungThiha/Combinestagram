@@ -14,4 +14,9 @@ Episode 14 is a conclusion for this chapter
 
 Episode 15 is an introduction
 
-Episode 16 is in [HelloRxKotlin](https://github.com/AungThiha/HelloRxKotlin)
+Episode 16 to 18 is in [HelloRxKotlin](https://github.com/AungThiha/HelloRxKotlin)
+
+Episode 19 - 21 is in this repo
+
+Episode 22 is conclusion for this chapter
+

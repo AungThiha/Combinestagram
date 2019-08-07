@@ -79,6 +79,12 @@ class MainActivity : AppCompatActivity() {
         }
       }
     })
+
+    viewModel.getThumbnailStatus().observe(this, Observer { status ->
+      if (status == ThumbnailStatus.READY){
+        thumbnail.setImageDrawable(collageImage.drawable)
+      }
+    })
   }
 
   private fun updateUI(photos: List<Photo>) {

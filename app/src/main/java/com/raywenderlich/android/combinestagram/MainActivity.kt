@@ -85,6 +85,13 @@ class MainActivity : AppCompatActivity() {
         thumbnail.setImageDrawable(collageImage.drawable)
       }
     })
+
+    viewModel.getCollageStatus().observe(this, Observer { status ->
+      if (status == CollageStatus.COMPLETE){
+        Toast.makeText(this, R.string.image_limit_reached,
+                Toast.LENGTH_SHORT).show()
+      }
+    })
   }
 
   private fun updateUI(photos: List<Photo>) {
@@ -109,6 +116,7 @@ class MainActivity : AppCompatActivity() {
   private fun actionClear() {
     viewModel.clearPhotos()
     collageImage.setImageResource(android.R.color.transparent)
+    thumbnail.setImageResource(android.R.color.transparent)
     title = getString(R.string.collage)
     updateUI(listOf())
   }

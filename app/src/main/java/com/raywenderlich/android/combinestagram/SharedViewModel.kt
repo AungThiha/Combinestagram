@@ -55,15 +55,22 @@ class SharedViewModel : ViewModel() {
 
   private val selectedPhotos = MutableLiveData<List<Photo>>()
   private val thumbnailStatus = MutableLiveData<ThumbnailStatus>()
+  private val collageStatus = MutableLiveData<CollageStatus>()
 
   private val subscriptions = CompositeDisposable()
   private val imagesSubject: BehaviorSubject<MutableList<Photo>>
           = BehaviorSubject.createDefault(mutableListOf())
 
   init {
-      subscriptions.add(imagesSubject.subscribe {
-        selectedPhotos.value = imagesSubject.value
-      })
+    val images = imagesSubject.share()
+
+    subscriptions.add(images.subscribe {
+      selectedPhotos.value = imagesSubject.value
+    })
+
+    subscriptions.add(images.filter { it.size == 6 }.subscribe {
+      collageStatus.postValue(CollageStatus.COMPLETE)
+    })
   }
 
   fun getSelectedPhotos(): LiveData<List<Photo>> {
@@ -72,6 +79,10 @@ class SharedViewModel : ViewModel() {
 
   fun getThumbnailStatus(): LiveData<ThumbnailStatus> {
     return thumbnailStatus
+  }
+
+  fun getCollageStatus(): LiveData<CollageStatus> {
+    return collageStatus
   }
 
   fun clearPhotos(){
